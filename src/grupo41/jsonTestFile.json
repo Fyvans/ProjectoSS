@@ -1,0 +1,24 @@
+{
+	"kind": "program",
+	"children":[
+	{
+		"kind": "echo",
+		"arguments": [
+			{
+				"kind": "string",
+				"value": "Rhellow",
+				"isDoubleQuote": true
+			}
+		]
+	},
+	{
+		"kind": "assign",
+		"operator": "=",
+		"left": {
+			"kind": "variable",
+			"name": "u"
+		},
+	}
+	],
+	"errors": []
+}
