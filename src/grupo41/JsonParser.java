@@ -12,79 +12,69 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class JsonParser {
-	private String kind = "kind";
+
+	//specific getters
+	public String getKind(JSONObject js){return (String) js.get("kind"); }
+	public String getName(JSONObject js){return (String) js.get("name");}
 	
-	//right
-	private String right = "right";
-	//lookup
-	private String kindOffsetLookup = "offsetlookup";
-	private String offsetKind = "what";
+	public JSONObject getleft(JSONObject js){return getObject(js, "left");}
+	public JSONObject getright(JSONObject js){return getObject(js, "right");}
 	
-	//encapsed
-	private String kindencapsed = "encapsed";
-	
-	//call
-	private String kindcall = "call";
-	
-	//left
-	private String left = "left";
-	
-	private String name = "name";
-	
-	public JsonParser(){
-		
+	public ArrayList<String> getArguments(JSONObject js, String valueargs ){
+		ArrayList<String> result = new ArrayList<String>();
+		JSONArray ja = (JSONArray) js.get(valueargs);
+		@SuppressWarnings("unchecked")
+		Iterator<JSONObject> i = ja.iterator();
+		while(i.hasNext()){
+			JSONObject j = i.next();
+			if(j.get("kind").equals("variable")){
+				result.add((String) j.get("name"));
+			}
+		}
+		return result;
 	}
 	
-	//specific getters offset
-	public String getOffsetWhatKind(JSONObject js){ return getValueStr(getValueObj(js, "what"), kind);}
-	public String getOffsetWhatname(JSONObject js){ return getValueStr(getValueObj(js, "what"), name);}
-	//public String getOffsetkind(JSONObject js){ return getValueStr(getValueObj(js, "offset"), name);}
-	//public String getOffsetname(JSONObject js){ return getValueStr(getValueObj(js, "offset"), name);}
 	
-	//specific getters
-	public String getArgument(JSONObject js){return Type(js, "variable") ?  getValueStr(js, "name") :  getValueStr(js, "value"); }
+	//ifs && Whiles
+	public JSONObject getBody(JSONObject js){
+		return (JSONObject) js.get("body");
+	} 
 	
-	//specific getters
-	public String getName(JSONObject js){return getValueStr(js, name);}
-	public String getkind(JSONObject js){return getValueStr(js, kind);}
-	public JSONObject getleft(JSONObject js){return getValueObj(js, left);}
-	public JSONObject getright(JSONObject js){return getValueObj(js, right);}
+	public JSONObject getAlternate(JSONObject js) {
+		return (JSONObject) js.get("alternate");
+	}
 	
+	public String getCallName(JSONObject js){return getName(getObject(js, "what"));}
+	
+	
+	public String getBinVarLeft(JSONObject js){
+		return getName(getObject(js, "left"));
+	}
 
-	//ir buscar um objecto
-		public Object getValue(JSONObject js, String w){
-			Object gets =  (Object) js.get(w);
-			return gets;
+	public String getBinVarRight(JSONObject js){
+		return getName(getObject(js, "right"));
+	}
+	
+	
+	//general getters
+	public ArrayList<JSONObject> getArray(JSONObject js, String s){
+		ArrayList<JSONObject> result = new ArrayList<JSONObject>();
+		JSONArray ja = (JSONArray) js.get(s);
+		@SuppressWarnings("unchecked")
+		Iterator<JSONObject> i = ja.iterator();
+		while(i.hasNext()){
+			result.add(i.next());
 		}
-		
-		//ir buscar um valor, normalmente string
-		public String getValueStr(JSONObject js, String w){
-			String gets =  (String) js.get(w);
-			return gets;
-		}
-		
-		//ir buscar um jsonobject
-		public JSONObject getValueObj(JSONObject js, String w){
-			JSONObject gets =  (JSONObject) js.get(w);
-			return gets;
-		}
-		
-		//ir buscar os elementos de uma jsonarray para uma arraylist
-		public ArrayList<JSONObject> getArray(JSONArray ja){
-			ArrayList<JSONObject> childs = new ArrayList<JSONObject>();
-			@SuppressWarnings("unchecked")
-			Iterator<JSONObject> iter = ja.iterator();
-			while(iter.hasNext()){
-				childs.add(iter.next());
-			}
-			return childs;
-		}
-		
-		
-		
-		
-		//teste
-		public Boolean Type(JSONObject j, String t){
-			return getkind(j).equals(t) ? true : false;
-		}
+		return result;
+	}
+	
+	public JSONObject getObject(JSONObject jo, String s){
+		return (JSONObject) jo.get(s);
+	}
+
+	
+	
+	
+	
+	
 }
